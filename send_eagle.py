@@ -13,7 +13,8 @@ import folder_paths
 sys.path.append(os.path.dirname(__file__))
 from eagleapi import api_item
 
-class EaglePngInfo:
+
+class SendEagle:
     def __init__(self):
         self.output_dir = folder_paths.get_output_directory()
         self.type = "output"
@@ -36,7 +37,7 @@ class EaglePngInfo:
     RETURN_TYPES = ()
     FUNCTION = "add_item"
     OUTPUT_NODE = True
-    CATEGORY = "EaglePngInfo"
+    CATEGORY = "EagleTools"
 
     def add_item(
         self,
@@ -227,5 +228,5 @@ class util:
 
 
 NODE_CLASS_MAPPINGS = {
-    "Send Webp Image to Eagle": EaglePngInfo,
+    "Send Webp Image to Eagle": SendEagle,
 }
