@@ -1,4 +1,6 @@
 # ComfyUI-send-Eagle
+![](misc/sss_top_eagle_ss.png)
+![](misc/workflow.svg)
 
 Test and initial release.
 
