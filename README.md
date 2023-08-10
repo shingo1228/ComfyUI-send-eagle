@@ -1,9 +1,8 @@
 # ComfyUI-send-Eagle
+Send the generated images to [Eagle](https://en.eagle.cool/) in webp file format. custom node for [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
+
 ![](misc/sss_top_eagle_ss.png)
 ![](misc/workflow.svg)
-
-
-Send the generated images to [Eagle](https://en.eagle.cool/) in webp file format. custom node for [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
 
 ## Description
 This custom node make subfolder(YYYY-MM-DD) on ComfyUI output directory.<br>
