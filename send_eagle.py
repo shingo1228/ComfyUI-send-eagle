@@ -35,7 +35,7 @@ class SendEagle:
     RETURN_TYPES = ()
     FUNCTION = "add_item"
     OUTPUT_NODE = True
-    CATEGORY = "EagleTools(dev)"
+    CATEGORY = "EagleTools"
 
     def add_item(
         self,
