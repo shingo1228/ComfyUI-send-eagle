@@ -45,11 +45,33 @@ class SendEagle:
         prompt=None,
         extra_pnginfo=None,
     ):
-        # prompt parsing
-        gen_data = PromptInfoExtractor(prompt)
+        def initialize_defaults(prompt):
+            print(f"prompt: {prompt}")
+            return "", [], "unknown", "00", "000000"
 
-        Eagle_annotation_txt = gen_data.formatted_annotation()
-        Eagle_tags = gen_data.get_prompt_tags()
+        try:
+            gen_data = PromptInfoExtractor(prompt)
+
+            Eagle_annotation_txt = gen_data.formatted_annotation()
+            Eagle_tags = gen_data.get_prompt_tags()
+
+            fn_modelname, _ = os.path.splitext(gen_data.info["model_name"])
+            fn_num_of_smp = gen_data.info["steps"]
+            fn_seed = gen_data.info["seed"]
+
+        except (json.JSONDecodeError, KeyError) as e:
+            if isinstance(e, json.JSONDecodeError):
+                print(f"Json decode error occurred. detail:{e}")
+            else:
+                print(f"Key error occurred. detail:{e}")
+
+            (
+                Eagle_annotation_txt,
+                Eagle_tags,
+                fn_modelname,
+                fn_num_of_smp,
+                fn_seed,
+            ) = initialize_defaults(prompt)
 
         subfolder_name = datetime.now().strftime("%Y-%m-%d")
 
@@ -67,10 +89,6 @@ class SendEagle:
             # get the (empty) Exif data of the generated Picture
             emptyExifData = img.getexif()
             imgexif = util.getExifFromPrompt(emptyExifData, prompt, extra_pnginfo)
-
-            fn_modelname, _ = os.path.splitext(gen_data.info["model_name"])
-            fn_num_of_smp = gen_data.info["steps"]
-            fn_seed = gen_data.info["seed"]
 
             width, height = img.size
             fn_width = width
