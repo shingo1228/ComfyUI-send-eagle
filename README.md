@@ -1,4 +1,6 @@
 # ComfyUI-send-Eagle
+[日本語 README はこちら](README.ja.md)
+
 Send the generated images to [Eagle](https://en.eagle.cool/) in webp file format. custom node for [ComfyUI](https://github.com/comfyanonymous/ComfyUI)
 
 ![](misc/sss_top_eagle_ss.png)
