@@ -21,7 +21,7 @@ ComfyUIでは、処理がそのノードに到達すると、暗黙的に"prompt
 
 - "prompt"及び"extra_pnginfo"をwebp形式のexif情報に埋め込み、画像ドロップによるワークフローの再現
 - "prompt"のjson情報を解析し、"KSampler"ノード及び"KSamplerAdvanced"ノード（以下、生成基準ノード）から以下の生成情報をEagleのメモ欄（annotation）に登録
-   - 「生成Step数」「サンプラー名」「スケジューラ名」「CFCスケール」「「Seed値」
+   - 「生成Step数」「サンプラー名」「スケジューラ名」「CFCスケール」「Seed値」
    - 生成基準ノードの入力:"latent"の上流ノード（"Empty Latent Image"ノードを想定）から、Latentの「幅」と「高さ」
    - 生成基準ノードの入力:"model"の上流ノードから「モデル名」（中間に"Load LoRA"ノードが存在していた場合は無視して"ckpt_name"を再帰的に探しにいきます）
    - 生成基準ノードの入力："positive"及び"negative"の上流ノードから「生成プロンプト」「ネガティブプロンプト」
