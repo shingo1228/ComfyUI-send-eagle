@@ -3,7 +3,7 @@
 
 生成された画像を [Eagle](https://en.eagle.cool/) へ webp形式で連携する [ComfyUI](https://github.com/comfyanonymous/ComfyUI) 用 拡張ノードです。
 
-![](misc/sss_top_eagle_ss.png)
+![](misc/sss_top_eagle_ss.jpg)
 ![](misc/workflow.svg)
 
 ## 機能
@@ -20,6 +20,7 @@ ComfyUIでは、処理がそのノードに到達すると、暗黙的に`prompt
 この拡張ノードでは、`prompt`及び`extra_pnginfo`の情報から以下の機能を実現しています。
 
 - `prompt`及び`extra_pnginfo`をwebp形式のexif情報に埋め込み、画像ドロップによるワークフローの再現
+![](misc/sss_exif.jpg)
 - `prompt`のjson情報を解析し、`KSampler`ノード及び`KSamplerAdvanced`ノード（以下、生成基準ノード）から以下の生成情報をEagleのメモ欄（annotation）に登録
    - 「生成Step数」「サンプラー名」「スケジューラ名」「CFCスケール」「Seed値」
    - 生成基準ノードの入力:`latent`の上流ノード（`Empty Latent Image`ノードを想定）から、Latentの「幅」と「高さ」
@@ -28,10 +29,13 @@ ComfyUIでは、処理がそのノードに到達すると、暗黙的に`prompt
    - `CLIPTextEncodeSDXL`を使用していた場合、`text_g`と`text_l`の内容が同一であった場合は`text_g`の内容を「生成プロンプト（書式:text_g:{text_g} text_l:{text_l}）」とします
    - これらの情報を、以下の書式でEagleのメモ欄（annotation）に連携<br>
       {`prompt`}<br>NegativePrompt:{`NegativePrompt`}<br>"Steps: {`steps`}, Sampler: {`sampler_name`} {`scheduler`}, CFG scale: {`cfg`}, Seed: {`seed`}, Size: {`width`}x{`height`}, Model: {`model_name`}"
+![](misc/sss_annotation.jpg)
 
    - これらの情報を基に、以下のネーミングルールでファイル名を生成<br>
      YYYYMMDD_HHMMss_SSSSSS-{`model_name`}-Smp-{`steps`}-{`seed`}-{`FinalImage_width`}-{`FinalImage_height`}.webp
-- `prompt`から解析した「生成プロンプト」を分割しタグとしてEagleのタグ（tags）に登録
+![](misc/sss_filename.jpg)
+   - `prompt`から解析した「生成プロンプト」を分割しタグとしてEagleのタグ（tags）に登録
+![](misc/sss_tags.jpg)
 
 ## 制限事項
 - ワークフロー内で複数の`KSampler`ノード、及び`KSamplerAdvanced`ノードが存在した場合、暗黙的に採番されているノード番号（正式項目名は不明）が最小の物を生成基準ノードとします。これはSamplerノードの目的が「生成用」「Refiner用」「Hires.fix用」なのか区別出来ないためです。よって「生成用」のプロンプトと、「Hires.fix用」のプロンプトが異なって定義されているといったワークフローの場合、目的の生成プロンプトが取得できない可能性があります。
