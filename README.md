@@ -2,7 +2,8 @@
 # ComfyUI-send-Eagle
 [Japanese README](README.ja.md)
 
-This is an extension node for [ComfyUI](https://github.com/comfyanonymous/ComfyUI) that allows you to send generated images in webp format to [Eagle](https://en.eagle.cool/).
+This is an extension node for [ComfyUI](https://github.com/comfyanonymous/ComfyUI) that allows you to send generated images in webp format to [Eagle](https://en.eagle.cool/).<br>
+This README.md is translated by ChatGPT Plus with Code Interpreter from [Japanese README](README.ja.md).
 
 ![](misc/sss_top_eagle_ss.jpg)
 ![](misc/workflow.svg)
