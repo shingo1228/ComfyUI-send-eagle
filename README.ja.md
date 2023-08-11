@@ -48,5 +48,5 @@ Use git clone https://github.com/shingo1228/ComfyUI-send-eagle in your ComfyUI c
 1. Navigate to the cloned repo e.g. `custom_nodes/ComfyUI-send-eagle`
 2. `git pull`
 ## 変更履歴
-2023/08/11 Support "CLIPTextEncodeSDXL" node<br>
+2023/08/11 "CLIPTextEncodeSDXL"ノードの"text_g"、"text_l"の情報取得に対応<br>
 2023/08/10 初期版リリース
