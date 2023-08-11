@@ -17,12 +17,12 @@ class PromptInfoExtractor:
             prompt (_type_): ComfyUI hidden object "prompt".
             config_filepath (_type_, optional): Configration file path. Defaults to None.
         """
+        #        self.load_data(prompt)
         self._prompt = prompt
 
-        # for debug
-        self._show_data()
+        if DEBUG:
+            self._show_data()
 
-        #        self.load_data(json_filepath)
         if config_filepath:
             self.load_config(config_filepath)
         else:
