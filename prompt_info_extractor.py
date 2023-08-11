@@ -48,7 +48,6 @@ class PromptInfoExtractor:
         dprint(f"Prompt:{self._prompt}")
 
     def gather_info(self):
-        # ワークフロー中の"KSampler"、若しくは"KSamplerAdvanced"ノードを取得
         ksampler_items = self.get_ksampler_items()
 
         if not ksampler_items:
@@ -86,7 +85,6 @@ class PromptInfoExtractor:
         return sorted(ksampler_items, key=lambda x: int(x[0]))
 
     def extract_model_name(self, item):
-        """解析基準ノードから辿り、モデルネームを取得する"""
         return self.get_ckpt_name(item["inputs"]["model"][0]).replace("\\", "_")
 
     def get_ckpt_name(self, node_number):
@@ -99,7 +97,6 @@ class PromptInfoExtractor:
         return None
 
     def extract_latent_image_info(self, item):
-        """解析基準ノードに入力されている"Empty Latent Image"ノードを取得する"""
         latent_image_node_number = item["inputs"]["latent_image"][0]
         return self._prompt[latent_image_node_number]
 
