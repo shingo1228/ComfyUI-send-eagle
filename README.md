@@ -8,7 +8,7 @@ Send the generated images to [Eagle](https://en.eagle.cool/) in webp file format
 This custom node make subfolder(YYYY-MM-DD) on ComfyUI output directory.<br>
 File naming rule is as follows(my setting in SD-webui A1111).
 
-./ComfyUI/output/YYYY-MM-DD/YYYYMMDD_HHMMss_SSSSSS-{model_name}-Smp-{steps}-{seed}-{latent_width}-{latent_height}.webp
+./ComfyUI/output/YYYY-MM-DD/YYYYMMDD_HHMMss_SSSSSS-{model_name}-Smp-{steps}-{seed}-{FinalImage_width}-{FinalImage_height}.webp
 
 ## Install
 Use git clone https://github.com/shingo1228/ComfyUI-send-eagle in your ComfyUI custom nodes directory
@@ -17,3 +17,5 @@ Use git clone https://github.com/shingo1228/ComfyUI-send-eagle in your ComfyUI c
 2. `git pull`
 ## How to use
 under construction
+## Change Log
+2023/08/11 Support "CLIPTextEncodeSDXL" node

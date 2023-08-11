@@ -47,12 +47,13 @@ class SendEagle:
     ):
         # prompt parsing
         gen_data = PromptInfoExtractor(prompt)
+
         Eagle_annotation_txt = gen_data.formatted_annotation()
         Eagle_tags = gen_data.get_prompt_tags()
 
         subfolder_name = datetime.now().strftime("%Y-%m-%d")
-        full_output_folder = os.path.join(self.output_dir, subfolder_name)
 
+        full_output_folder = os.path.join(self.output_dir, subfolder_name)
         if not os.path.exists(full_output_folder):
             os.makedirs(full_output_folder)
 
@@ -70,10 +71,12 @@ class SendEagle:
             fn_modelname, _ = os.path.splitext(gen_data.info["model_name"])
             fn_num_of_smp = gen_data.info["steps"]
             fn_seed = gen_data.info["seed"]
-            fn_width = gen_data.info["width"]
-            fn_height = gen_data.info["height"]
 
-            filename = f"{util.getMsecFilenameSuffix()}-{fn_modelname}-Smp-{fn_num_of_smp}-{fn_seed}-{fn_width}-{fn_height}.webp"
+            width, height = img.size
+            fn_width = width
+            fn_height = height
+
+            filename = f"{util.get_datetime_str_msec()}-{fn_modelname}-Smp-{fn_num_of_smp}-{fn_seed}-{fn_width}-{fn_height}.webp"
             filefullpath = os.path.join(full_output_folder, filename)
 
             img.save(filefullpath, quality=compression, exif=imgexif, lossless=lossless)
@@ -95,7 +98,7 @@ class SendEagle:
 
 class util:
     @classmethod
-    def getMsecFilenameSuffix(cls):
+    def get_datetime_str_msec(cls):
         now = datetime.now()
         date_time_str = now.strftime("%Y%m%d_%H%M%S")
         return f"{date_time_str}_{now.microsecond:06}"

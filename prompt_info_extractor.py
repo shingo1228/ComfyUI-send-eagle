@@ -1,10 +1,27 @@
 import json
 import re
 
+DEBUG = False
+
+
+def dprint(str):
+    if DEBUG:
+        print(f"debug:{str}")
+
 
 class PromptInfoExtractor:
     def __init__(self, prompt, config_filepath=None):
-        self.data = prompt
+        """constructor
+
+        Args:
+            prompt (_type_): ComfyUI hidden object "prompt".
+            config_filepath (_type_, optional): Configration file path. Defaults to None.
+        """
+        self._prompt = prompt
+
+        # for debug
+        self._show_data()
+
         #        self.load_data(json_filepath)
         if config_filepath:
             self.load_config(config_filepath)
@@ -18,53 +35,63 @@ class PromptInfoExtractor:
     def load_data(self, json_filepath):
         """Load JSON data from the provided filepath."""
         with open(json_filepath, "r") as file:
-            self.data = json.load(file)
+            self._prompt = json.load(file)
 
     def load_config(self, config_filepath):
         """Load configuration from the provided filepath."""
         with open(config_filepath, "r") as config_file:
             self.config = json.load(config_file)
 
+    def _show_data(self):
+        """For debug. show information of ComfyUI hidden object "prompt" and "extra_onginfo"."""
+        dprint(f"type of prompt:{type(self._prompt)}")
+        dprint(f"Prompt:{self._prompt}")
+
     def gather_info(self):
+        # ワークフロー中の"KSampler"、若しくは"KSamplerAdvanced"ノードを取得
         ksampler_items = self.get_ksampler_items()
 
         if not ksampler_items:
             return None
 
-        key, item = ksampler_items[0]
+        key, ksampler_item = ksampler_items[0]
 
-        model_name = self.extract_model_name(item)
-        latent_image_info = self.extract_latent_image_info(item)
+        model_name = self.extract_model_name(ksampler_item)
+        latent_image_info = self.extract_latent_image_info(ksampler_item)
+        prompt_text = self.extract_prompt_info()
 
         info_dict = {
-            "steps": item["inputs"]["steps"],
-            "sampler_name": item["inputs"]["sampler_name"],
-            "scheduler": item["inputs"]["scheduler"],
-            "cfg": item["inputs"]["cfg"],
-            "seed": item["inputs"].get("seed", item["inputs"].get("noise_seed", None)),
+            "steps": ksampler_item["inputs"]["steps"],
+            "sampler_name": ksampler_item["inputs"]["sampler_name"],
+            "scheduler": ksampler_item["inputs"]["scheduler"],
+            "cfg": ksampler_item["inputs"]["cfg"],
+            "seed": ksampler_item["inputs"].get(
+                "seed", ksampler_item["inputs"].get("noise_seed", None)
+            ),
+            "model_name": model_name,
             "width": latent_image_info["inputs"]["width"],
             "height": latent_image_info["inputs"]["height"],
-            "model_name": model_name,
+            "prompt": prompt_text["prompt"],
+            "negative": prompt_text["negative"],
         }
-
-        self.extract_prompt_info(info_dict)
 
         return info_dict
 
     def get_ksampler_items(self):
         ksampler_items = [
             (k, v)
-            for k, v in self.data.items()
+            for k, v in self._prompt.items()
             if v["class_type"] in self.config["search_class_types"]
         ]
         return sorted(ksampler_items, key=lambda x: int(x[0]))
 
     def extract_model_name(self, item):
+        """解析基準ノードから辿り、モデルネームを取得する"""
         return self.get_ckpt_name(item["inputs"]["model"][0]).replace("\\", "_")
 
     def get_ckpt_name(self, node_number):
         """Recursively search for the 'ckpt_name' key starting from the specified node."""
-        node = self.data[node_number]
+        node = self._prompt[node_number]
         if "ckpt_name" in node["inputs"]:
             return node["inputs"]["ckpt_name"]
         if "model" in node["inputs"]:
@@ -72,17 +99,21 @@ class PromptInfoExtractor:
         return None
 
     def extract_latent_image_info(self, item):
+        """解析基準ノードに入力されている"Empty Latent Image"ノードを取得する"""
         latent_image_node_number = item["inputs"]["latent_image"][0]
-        return self.data[latent_image_node_number]
+        return self._prompt[latent_image_node_number]
 
-    def extract_prompt_info(self, info_dict):
+    def extract_prompt_info(self):
         positive_text = self.extract_text_by_key("positive")
         negative_text = self.extract_text_by_key("negative")
 
+        info_dict = {}
         if positive_text:
             info_dict["prompt"] = positive_text
         if negative_text:
             info_dict["negative"] = negative_text
+
+        return info_dict
 
     def extract_text_by_key(self, key):
         """Extract text by the given key, either 'positive' or 'negative'."""
@@ -97,9 +128,32 @@ class PromptInfoExtractor:
             return None
 
         target_node_number = ksampler_item["inputs"][key][0]
-        target_node = self.data[target_node_number]
+        target_node = self._prompt.get(str(target_node_number), {})
+        extracted_text = self.extract_text_from_node_v2(target_node)
 
-        return target_node["inputs"]["text"]
+        return extracted_text
+
+    def extract_text_from_node_v2(self, node):
+        # Extract direct text if available
+        direct_text = node.get("inputs", {}).get("text")
+
+        # Extract text_g and text_l and check if they are same or different
+        text_g = node.get("inputs", {}).get("text_g")
+        text_l = node.get("inputs", {}).get("text_l")
+
+        if direct_text:
+            return direct_text
+        elif text_g and text_l:
+            if text_g == text_l:
+                return text_g
+            else:
+                return f"text_g:{text_g} text_l:{text_l}"
+        elif text_g:
+            return text_g
+        elif text_l:
+            return text_l
+
+        return None
 
     def format_info(self, info_dict):
         """Format the gathered information based on the configuration."""
