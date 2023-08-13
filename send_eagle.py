@@ -59,12 +59,15 @@ class SendEagle:
             fn_num_of_smp = gen_data.info["steps"]
             fn_seed = gen_data.info["seed"]
 
-        except (json.JSONDecodeError, KeyError) as e:
+        except (json.JSONDecodeError, KeyError, TypeError) as e:
             if isinstance(e, json.JSONDecodeError):
                 print(f"Json decode error occurred. detail:{e}")
-            else:
+            elif isinstance(e, KeyError):
                 print(f"Key error occurred. detail:{e}")
-
+            elif isinstance(e, TypeError):
+                print(f"Type error occurred. detail:{e}")
+            else:
+                print(f"Process error occurred. detail:{e}")
             (
                 Eagle_annotation_txt,
                 Eagle_tags,
