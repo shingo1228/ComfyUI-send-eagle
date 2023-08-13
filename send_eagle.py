@@ -13,7 +13,6 @@ sys.path.append(os.path.dirname(__file__))
 from eagleapi import api_item
 from prompt_info_extractor import PromptInfoExtractor
 
-
 class SendEagle:
     def __init__(self):
         self.output_dir = folder_paths.get_output_directory()
@@ -46,8 +45,16 @@ class SendEagle:
         prompt=None,
         extra_pnginfo=None,
     ):
-        def initialize_defaults(prompt):
-            print(f"prompt: {json.dumps(prompt, indent=4)}")
+        def initialize_defaults(prompt, extra_pnginfo):
+            log_file_name = os.path.join(os.path.dirname(__file__), "prompt_decode_err.log")
+            with open(log_file_name, 'w', encoding='utf-8') as f:
+                f.write('"prompt:"\n')
+                json.dump(prompt, f, indent=4, ensure_ascii=False)
+                if extra_pnginfo is not None:
+                    f.write('\n\n"extra_pnginfo:"\n')
+                    json.dump(extra_pnginfo, f, indent=4, ensure_ascii=False)
+
+            print("check prompt_decode_err.log")
             traceback.print_exc()
             return "", [], "unknown", "00", "000000"
 
@@ -76,7 +83,7 @@ class SendEagle:
                 fn_modelname,
                 fn_num_of_smp,
                 fn_seed,
-            ) = initialize_defaults(prompt)
+            ) = initialize_defaults(prompt, extra_pnginfo)
 
         subfolder_name = datetime.now().strftime("%Y-%m-%d")
 
