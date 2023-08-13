@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import numpy as np
+import traceback
 
 from PIL import Image
 from datetime import datetime
@@ -46,7 +47,8 @@ class SendEagle:
         extra_pnginfo=None,
     ):
         def initialize_defaults(prompt):
-            print(f"prompt: {prompt}")
+            print(f"prompt: {json.dumps(prompt, indent=4)}")
+            traceback.print_exc()
             return "", [], "unknown", "00", "000000"
 
         try:
@@ -59,7 +61,7 @@ class SendEagle:
             fn_num_of_smp = gen_data.info["steps"]
             fn_seed = gen_data.info["seed"]
 
-        except (json.JSONDecodeError, KeyError, TypeError) as e:
+        except (json.JSONDecodeError, KeyError, TypeError, Exception) as e:
             if isinstance(e, json.JSONDecodeError):
                 print(f"Json decode error occurred. detail:{e}")
             elif isinstance(e, KeyError):
