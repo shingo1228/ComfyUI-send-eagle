@@ -85,7 +85,7 @@ class PromptInfoExtractor:
         return sorted(ksampler_items, key=lambda x: int(x[0]))
 
     def extract_model_name(self, item):
-        return self.get_ckpt_name(item["inputs"]["model"][0]).replace("\\", "_")
+        return self.get_ckpt_name(item["inputs"]["model"][0]).replace('/', '_').replace("\\", "_")
 
     def get_ckpt_name(self, node_number):
         """Recursively search for the 'ckpt_name' key starting from the specified node."""
