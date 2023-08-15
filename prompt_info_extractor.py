@@ -85,7 +85,11 @@ class PromptInfoExtractor:
         return sorted(ksampler_items, key=lambda x: int(x[0]))
 
     def extract_model_name(self, item):
-        return self.get_ckpt_name(item["inputs"]["model"][0]).replace('/', '_').replace("\\", "_")
+        return (
+            self.get_ckpt_name(item["inputs"]["model"][0])
+            .replace("/", "_")
+            .replace("\\", "_")
+        )
 
     def get_ckpt_name(self, node_number):
         """Recursively search for the 'ckpt_name' key starting from the specified node."""
@@ -98,7 +102,24 @@ class PromptInfoExtractor:
 
     def extract_latent_image_info(self, item):
         latent_image_node_number = item["inputs"]["latent_image"][0]
-        return self._prompt[latent_image_node_number]
+        target_item = self._prompt[latent_image_node_number]
+
+        if target_item["class_type"] == "EmptyLatentImage":
+            return target_item
+
+        elif target_item["class_type"] == "SDXL Empty Latent Image":
+            resolusion_str = target_item["inputs"]["resolution"]
+            pattern = r"(\d+) x (\d+)"
+            match = re.search(pattern, resolusion_str)
+
+            latent_image_info = {
+                "inputs": {"width": int(match.group(1)), "height": int(match.group(2))}
+            }
+            return latent_image_info
+
+        else:
+            latent_image_info = {"inputs": {"width": 0, "height": 0}}
+            return latent_image_info
 
     def extract_prompt_info(self):
         positive_text = self.extract_text_by_key("positive")
