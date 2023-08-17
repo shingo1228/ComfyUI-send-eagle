@@ -1,6 +1,9 @@
 # ComfyUI-send-Eagle
 [English README](README.md)
 
+***本リポジトリの更新は終了いたします。後継のリポジトリは、こちらの [ComfyUI-send-eagle-slim](https://github.com/shingo1228/ComfyUI-send-eagle-slim) になります。***
+***[ComfyUI-send-eagle-slim](https://github.com/shingo1228/ComfyUI-send-eagle-slim)は、Eagle連携の機能を、本ノードに必要なものに絞って作り直したもので、初期リリース時点で機能的には同一となります。***
+
 生成された画像を [Eagle](https://en.eagle.cool/) へ webp形式で連携する [ComfyUI](https://github.com/comfyanonymous/ComfyUI) 用 拡張ノードです。
 
 ![](misc/sss_top_eagle_ss.jpg)

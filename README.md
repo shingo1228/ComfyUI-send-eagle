@@ -1,5 +1,9 @@
 
 # ComfyUI-send-Eagle
+***This repository will no longer be updated. The successor repository is [ComfyUI-send-eagle-slim](https://github.com/shingo1228/ComfyUI-send-eagle-slim).***
+
+***[ComfyUI-send-eagle-slim](https://github.com/shingo1228/ComfyUI-send-eagle-slim) has been redesigned to focus on the essential Eagle integration features for this node, and will have equivalent functionality at the time of its initial release.***
+
 [Japanese README](README.ja.md)
 
 This is an extension node for [ComfyUI](https://github.com/comfyanonymous/ComfyUI) that allows you to send generated images in webp format to [Eagle](https://en.eagle.cool/).<br>
